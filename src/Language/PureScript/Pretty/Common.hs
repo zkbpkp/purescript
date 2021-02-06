@@ -50,6 +50,9 @@ data SMap = SMap Text SourcePos SourcePos
 --
 newtype StrPos = StrPos (SourcePos, Text, [SMap])
 
+instance Semigroup StrPos where
+  StrPos (a,b,c) <> StrPos (a',b',c') = StrPos (a `addPos` a', b <> b', c ++ (bumpPos a <$> c'))
+
 -- |
 -- Make a monoid where append consists of concatenating the string part, adding the lengths
 -- appropriately and advancing source mappings on the right hand side to account for
@@ -58,7 +61,7 @@ newtype StrPos = StrPos (SourcePos, Text, [SMap])
 instance Monoid StrPos where
   mempty = StrPos (SourcePos 0 0, "", [])
 
-  StrPos (a,b,c) `mappend` StrPos (a',b',c') = StrPos (a `addPos` a', b <> b', c ++ (bumpPos a <$> c'))
+  -- StrPos (a,b,c) `mappend` StrPos (a',b',c') = StrPos (a `addPos` a', b <> b', c ++ (bumpPos a <$> c'))
 
   mconcat ms =
     let s' = foldMap (\(StrPos(_, s, _)) -> s) ms
@@ -88,7 +91,7 @@ instance Emit StrPos where
       mapping = SMap (T.pack file) startPos zeroPos
       zeroPos = SourcePos 0 0
 
-newtype PlainString = PlainString Text deriving Monoid
+newtype PlainString = PlainString Text deriving (Semigroup, Monoid)
 
 runPlainString :: PlainString -> Text
 runPlainString (PlainString s) = s

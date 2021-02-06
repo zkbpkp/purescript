@@ -20,7 +20,7 @@ module Language.PureScript.Publish
   , getResolvedDependencies
   ) where
 
-import Protolude hiding (stdin)
+import Protolude hiding (lines, stdin)
 
 import Control.Arrow ((***))
 import Control.Category ((>>>))
@@ -36,7 +36,7 @@ import qualified Data.Text as T
 import Data.Time.Clock (UTCTime)
 import Data.Time.Clock.POSIX (posixSecondsToUTCTime)
 import Data.Version
-import qualified Data.SPDX as SPDX
+import qualified Distribution.SPDX.Extra as SPDX
 
 import System.Directory (doesFileExist)
 import System.FilePath.Glob (globDir1)
@@ -230,7 +230,7 @@ checkLicense pkgMeta =
 -- Check if a string is a valid SPDX license expression.
 --
 isValidSPDX :: String -> Bool
-isValidSPDX = (== 1) . length . SPDX.parseExpression
+isValidSPDX _ = True -- TODO: (== 1) . length . SPDX.parseExpression
 
 extractGithub :: Text -> Maybe (D.GithubUser, D.GithubRepo)
 extractGithub = stripGitHubPrefixes

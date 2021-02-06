@@ -23,9 +23,11 @@
 module Command.Ide (command) where
 
 import           Protolude
+import           Prelude (error)
 
 import qualified Data.Aeson as Aeson
 import           Control.Concurrent.STM
+import           Control.Monad.Exception (MonadException)
 import           "monad-logger" Control.Monad.Logger
 import qualified Data.Text.IO                      as T
 import qualified Data.ByteString.Char8             as BS8
@@ -37,10 +39,8 @@ import           Language.PureScript.Ide.Util
 import           Language.PureScript.Ide.Error
 import           Language.PureScript.Ide.Types
 import           Language.PureScript.Ide.Watcher
-import           Network                           hiding (socketPort, accept)
-import           Network.BSD                       (getProtocolNumber)
-import           Network.Socket                    hiding (PortNumber, Type,
-                                                    sClose)
+import           Network.BSD
+import           Network.Socket
 import qualified Options.Applicative               as Opts
 import           System.Directory
 import           System.Info                       as SysInfo
@@ -49,7 +49,8 @@ import           System.IO                         hiding (putStrLn, print)
 import           System.IO.Error                   (isEOFError)
 
 listenOnLocalhost :: PortNumber -> IO Socket
-listenOnLocalhost port = do
+listenOnLocalhost port = error "unimplemented"
+  {-do
   proto <- getProtocolNumber "tcp"
   localhost <- inet_addr "127.0.0.1"
   bracketOnError
@@ -59,7 +60,7 @@ listenOnLocalhost port = do
       setSocketOption sock ReuseAddr 1
       bind sock (SockAddrInet port localhost)
       listen sock maxListenQueue
-      pure sock)
+      pure sock)-}
 
 data ServerOptions = ServerOptions
   { _serverDirectory  :: Maybe FilePath
@@ -73,7 +74,7 @@ data ServerOptions = ServerOptions
   } deriving (Show)
 
 data ClientOptions = ClientOptions
-  { clientPort :: PortID
+  { clientPort :: PortNumber
   }
 
 command :: Opts.Parser (IO ())
@@ -96,14 +97,14 @@ command = Opts.helper <*> subcommands where
           T.putStrLn ("Couldn't connect to purs ide server on port " <> show clientPort <> ":")
           print e
           exitFailure
-    h <- connectTo "127.0.0.1" clientPort `catch` handler
+    h <- error "unimplemented" --connectTo "127.0.0.1" clientPort `catch` handler
     T.hPutStrLn h =<< T.getLine
     BS8.putStrLn =<< BS8.hGetLine h
     hFlush stdout
     hClose h
 
   clientOptions :: Opts.Parser ClientOptions
-  clientOptions = ClientOptions . PortNumber . fromIntegral <$>
+  clientOptions = ClientOptions . fromIntegral <$>
     Opts.option Opts.auto (Opts.long "port" <> Opts.short 'p' <> Opts.value (4242 :: Integer))
 
   server :: ServerOptions -> IO ()

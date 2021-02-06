@@ -19,6 +19,7 @@ import Control.Monad.State
 
 import qualified Data.Map as M
 import Data.Text (Text)
+import qualified Data.Maybe as Maybe
 
 import Language.PureScript.Crash
 import Language.PureScript.Environment
@@ -207,7 +208,7 @@ infer'
   -> m (Kind, [(Text, Kind)])
 infer' (ForAll ident ty _) = do
   k1 <- freshKind
-  Just moduleName <- checkCurrentModule <$> get
+  moduleName <- Maybe.fromJust . checkCurrentModule <$> get
   (k2, args) <- bindLocalTypeVariables moduleName [(ProperName ident, k1)] $ infer ty
   unifyKinds k2 kindType
   return (kindType, (ident, k1) : args)
@@ -220,7 +221,7 @@ infer' other = (, []) <$> go other
   go :: Type -> m Kind
   go (ForAll ident ty _) = do
     k1 <- freshKind
-    Just moduleName <- checkCurrentModule <$> get
+    moduleName <- Maybe.fromJust . checkCurrentModule <$> get
     k2 <- bindLocalTypeVariables moduleName [(ProperName ident, k1)] $ go ty
     unifyKinds k2 kindType
     return kindType
@@ -232,10 +233,10 @@ infer' other = (, []) <$> go other
   go TUnknown{} = freshKind
   go (TypeLevelString _) = return kindSymbol
   go (TypeVar v) = do
-    Just moduleName <- checkCurrentModule <$> get
+    moduleName <- Maybe.fromJust . checkCurrentModule <$> get
     lookupTypeVariable moduleName (Qualified Nothing (ProperName v))
   go (Skolem v _ _ _) = do
-    Just moduleName <- checkCurrentModule <$> get
+    moduleName <- Maybe.fromJust . checkCurrentModule <$> get
     lookupTypeVariable moduleName (Qualified Nothing (ProperName v))
   go (TypeConstructor v) = do
     env <- getEnv

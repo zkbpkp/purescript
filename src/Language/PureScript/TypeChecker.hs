@@ -276,7 +276,7 @@ typeCheckAll moduleName _ = traverse go
     warnAndRethrow (addHint (ErrorInValueDeclaration name) . addHint (PositionedError ss)) $ do
       val' <- checkExhaustiveExpr ss env moduleName val
       valueIsNotDefined moduleName name
-      [(_, (val'', ty))] <- typesOf NonRecursiveBindingGroup moduleName [((sa, name), val')]
+      (_, (val'', ty)) <- head <$> typesOf NonRecursiveBindingGroup moduleName [((sa, name), val')]
       addValue moduleName name ty nameKind
       return $ ValueDecl sa name nameKind [] [MkUnguarded val'']
   go ValueDeclaration{} = internalError "Binders were not desugared"

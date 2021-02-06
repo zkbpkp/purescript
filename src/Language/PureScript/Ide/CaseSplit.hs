@@ -22,6 +22,7 @@ module Language.PureScript.Ide.CaseSplit
        ) where
 
 import           Protolude                     hiding (Constructor)
+import           Prelude (error)
 
 import qualified Data.Map                      as M
 import qualified Data.Text                     as T
@@ -50,10 +51,13 @@ caseSplit :: (Ide m, MonadError IdeError m) =>
 caseSplit q = do
   type' <- parseType' q
   (tc, args) <- splitTypeConstructor type'
-  (EDType _ _ (P.DataType typeVars ctors)) <- findTypeDeclaration tc
+  (typeVars, ctors) <- fromEDType <$> findTypeDeclaration tc
   let applyTypeVars = P.everywhereOnTypes (P.replaceAllTypeVars (zip (map fst typeVars) args))
   let appliedCtors = map (second (map applyTypeVars)) ctors
   pure appliedCtors
+    where
+      fromEDType (EDType _ _ (P.DataType t c)) = (t, c)
+      fromEDType _ = error "cannot get datatype from externs declaration"
 
 findTypeDeclaration :: (Ide m, MonadError IdeError m) =>
                          P.ProperName 'P.TypeName -> m ExternsDeclaration
