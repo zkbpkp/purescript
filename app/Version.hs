@@ -4,7 +4,7 @@
 module Version where
 
 import Data.Version (showVersion)
-import Paths_purescript as Paths
+import Paths_purescript11 as Paths
 
 #ifndef RELEASE
 import qualified Development.GitRev as GitRev

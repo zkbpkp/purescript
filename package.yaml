@@ -1,4 +1,4 @@
-name: purescript
+name: purescript11
 version: '0.11.7'
 synopsis: PureScript Programming Language Compiler
 description: A small strongly, statically typed programming language with expressive
@@ -93,7 +93,7 @@ dependencies:
 library:
   source-dirs: src
   ghc-options: -Wall -O2
-  other-modules: Paths_purescript
+  other-modules: Paths_purescript11
   default-extensions:
     - ConstraintKinds
     - DataKinds
@@ -130,7 +130,7 @@ executables:
       - Command.Ide
       - Command.Publish
       - Command.REPL
-      - Paths_purescript
+      - Paths_purescript11
       - Version
 
     dependencies:
@@ -139,7 +139,7 @@ executables:
       - network
       - network-bsd
       - optparse-applicative >=0.15.1 && <0.16
-      - purescript
+      - purescript11
       - wai ==3.*
       - wai-websockets ==3.*
       - warp ==3.*
@@ -158,7 +158,7 @@ tests:
     source-dirs: tests
     ghc-options: -Wall
     dependencies:
-    - purescript
+    - purescript11
     - hspec
     - hspec-discover
     - HUnit

@@ -4,7 +4,7 @@ import           Prelude.Compat
 
 import           Data.List (intercalate)
 import           Data.Version (showVersion)
-import qualified Paths_purescript as Paths
+import qualified Paths_purescript11 as Paths
 import qualified Language.PureScript.Interactive.Directive as D
 import           Language.PureScript.Interactive.Types
 

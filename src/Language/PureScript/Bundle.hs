@@ -34,7 +34,7 @@ import qualified Data.Set as S
 import Language.JavaScript.Parser
 import Language.JavaScript.Parser.AST
 
-import qualified Paths_purescript as Paths
+import qualified Paths_purescript11 as Paths
 
 import System.FilePath (takeFileName, takeDirectory, takeDirectory, makeRelative)
 

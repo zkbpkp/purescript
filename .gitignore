@@ -20,4 +20,4 @@ examples/docs/docs/
 core-tests/full-core-docs.md
 .psc-ide-port
 .psc-package/
-purescript.cabal
+purescript11.cabal

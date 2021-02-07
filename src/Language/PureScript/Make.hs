@@ -72,7 +72,7 @@ import qualified Language.PureScript.CoreFn as CF
 import qualified Language.PureScript.CoreFn.ToJSON as CFJ
 import qualified Language.PureScript.CoreImp.AST as Imp
 import qualified Language.PureScript.Parser as PSParser
-import qualified Paths_purescript as Paths
+import qualified Paths_purescript11 as Paths
 import           SourceMap
 import           SourceMap.Types
 import           System.Directory (doesFileExist, getModificationTime, createDirectoryIfMissing, getCurrentDirectory)

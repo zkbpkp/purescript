@@ -34,7 +34,7 @@ import Language.PureScript.Names
 import Language.PureScript.TypeClassDictionaries
 import Language.PureScript.Types
 
-import Paths_purescript as Paths
+import Paths_purescript11 as Paths
 
 -- | The data which will be serialized to an externs file
 data ExternsFile = ExternsFile
