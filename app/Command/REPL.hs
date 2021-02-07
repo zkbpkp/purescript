@@ -25,7 +25,6 @@ import           Control.Concurrent.STM (TVar, atomically, newTVarIO, writeTVar,
 import           Control.Exception (fromException)
 import           Control.Monad
 import           Control.Monad.Catch (MonadMask)
-import           Control.Monad.Exception (MonadException, SomeException)
 import           Control.Monad.IO.Class (MonadIO, liftIO)
 import           Control.Monad.Trans.Class
 import           Control.Monad.Trans.Except (ExceptT(..), runExceptT)
