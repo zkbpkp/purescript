@@ -632,7 +632,7 @@ codeGen optionsMainModule optionsNamespace ms outFileOpt = (fmap sourceMapping o
   wrap mn ds =
     [
     JSMethodCall (JSExpressionParen lf (JSFunctionExpression JSNoAnnot JSIdentNone JSNoAnnot
-                                                (JSLOne (JSIdentName JSNoAnnot "exports")) JSNoAnnot
+                                                (JSLOne (JSIdentifier JSNoAnnot "exports")) JSNoAnnot
                                                 (JSBlock sp (lfHead ds) lf)) -- \n not quite in right place
                                     JSNoAnnot)
                   JSNoAnnot

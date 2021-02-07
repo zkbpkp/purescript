@@ -58,7 +58,7 @@ dependencies:
   - haskeline >=0.7.0.0
   - http-client >=0.6.4.1 && <0.7
   - http-types
-  - language-javascript >=0.7.0.0 && <0.8
+  - language-javascript ==0.7.1.0
   - lens ==4.*
   - lifted-base >=0.2.3 && <0.2.4
   - monad-control >=1.0.0.0 && <1.1
