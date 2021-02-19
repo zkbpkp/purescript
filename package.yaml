@@ -113,44 +113,44 @@ library:
     - TupleSections
     - ViewPatterns
 
-executables:
-  purs:
-    main: Main.hs
-    source-dirs: app
-    ghc-options: -Wall -O2 -fno-warn-unused-do-bind -threaded -rtsopts -with-rtsopts=-N
-    other-modules:
-      - Command.Bundle
-      - Command.Compile
-      - Command.Docs
-      - Command.Docs.Ctags
-      - Command.Docs.Etags
-      - Command.Docs.Html
-      - Command.Docs.Tags
-      - Command.Hierarchy
-      - Command.Ide
-      - Command.Publish
-      - Command.REPL
-      - Paths_purescript11
-      - Version
-
-    dependencies:
-      - ansi-wl-pprint
-      - file-embed
-      - network
-      - network-bsd
-      - optparse-applicative >=0.15.1 && <0.16
-      - purescript11
-      - wai ==3.*
-      - wai-websockets ==3.*
-      - warp ==3.*
-      - websockets >=0.9 && <0.13
-    when:
-    - condition: flag(release)
-      then:
-        cpp-options: -DRELEASE
-      else:
-        dependencies:
-        - gitrev >=1.2.0 && <1.4
+# executables:
+#   purs:
+#     main: Main.hs
+#     source-dirs: app
+#     ghc-options: -Wall -O2 -fno-warn-unused-do-bind -threaded -rtsopts -with-rtsopts=-N
+#     other-modules:
+#       - Command.Bundle
+#       - Command.Compile
+#       - Command.Docs
+#       - Command.Docs.Ctags
+#       - Command.Docs.Etags
+#       - Command.Docs.Html
+#       - Command.Docs.Tags
+#       - Command.Hierarchy
+#       - Command.Ide
+#       - Command.Publish
+#       - Command.REPL
+#       - Paths_purescript11
+#       - Version
+# 
+#     dependencies:
+#       - ansi-wl-pprint
+#       - file-embed
+#       - network
+#       - network-bsd
+#       - optparse-applicative >=0.15.1 && <0.16
+#       - purescript11
+#       - wai ==3.*
+#       - wai-websockets ==3.*
+#       - warp ==3.*
+#       - websockets >=0.9 && <0.13
+#     when:
+#     - condition: flag(release)
+#       then:
+#         cpp-options: -DRELEASE
+#       else:
+#         dependencies:
+#         - gitrev >=1.2.0 && <1.4
 
 tests:
   tests:
