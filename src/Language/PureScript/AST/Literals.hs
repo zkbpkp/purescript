@@ -1,9 +1,12 @@
+{-# LANGUAGE DeriveDataTypeable #-}
+
 -- |
 -- The core functional representation for literal values.
 --
 module Language.PureScript.AST.Literals where
 
 import Prelude.Compat
+import Data.Data (Data)
 import Language.PureScript.PSString (PSString)
 
 -- |
@@ -35,4 +38,4 @@ data Literal a
   -- An object literal
   --
   | ObjectLiteral [(PSString, a)]
-  deriving (Eq, Ord, Show, Functor)
+  deriving (Data, Eq, Ord, Show, Functor)

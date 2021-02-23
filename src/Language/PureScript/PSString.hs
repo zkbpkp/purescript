@@ -1,6 +1,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 
 module Language.PureScript.PSString
   ( PSString
@@ -19,6 +20,7 @@ import Control.DeepSeq (NFData)
 import Control.Exception (try, evaluate)
 import Control.Applicative ((<|>))
 import Data.Char (chr)
+import Data.Data (Data)
 import Data.Bits (shiftR)
 import Data.List (unfoldr)
 import Data.Monoid ((<>))
@@ -53,7 +55,7 @@ import qualified Data.Aeson.Types as A
 -- and arrays of UTF-16 code units (integers) otherwise.
 --
 newtype PSString = PSString { toUTF16CodeUnits :: [Word16] }
-  deriving (Eq, Ord, Semigroup, Monoid, Generic)
+  deriving (Data, Eq, Ord, Semigroup, Monoid, Generic)
 
 instance NFData PSString
 

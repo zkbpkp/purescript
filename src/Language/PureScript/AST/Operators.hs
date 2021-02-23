@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 -- |
 -- Operators fixity and associativity
 --
@@ -10,6 +11,7 @@ import GHC.Generics (Generic)
 import Control.DeepSeq (NFData)
 import Data.Aeson ((.=))
 import qualified Data.Aeson as A
+import Data.Data (Data)
 
 import Language.PureScript.Crash
 
@@ -22,7 +24,7 @@ type Precedence = Integer
 -- Associativity for infix operators
 --
 data Associativity = Infixl | Infixr | Infix
-  deriving (Show, Eq, Ord, Generic)
+  deriving (Data, Show, Eq, Ord, Generic)
 
 instance NFData Associativity
 
@@ -47,7 +49,7 @@ instance A.FromJSON Associativity where
 -- Fixity data for infix operators
 --
 data Fixity = Fixity Associativity Precedence
-  deriving (Show, Eq, Ord, Generic)
+  deriving (Data, Show, Eq, Ord, Generic)
 
 instance NFData Fixity
 

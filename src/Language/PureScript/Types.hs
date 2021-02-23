@@ -1,6 +1,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 
 -- |
 -- Data types for types
@@ -15,6 +16,7 @@ import Control.DeepSeq (NFData)
 import Control.Monad ((<=<))
 import qualified Data.Aeson as A
 import qualified Data.Aeson.TH as A
+import Data.Data (Data)
 import Data.List (sortBy)
 import Data.Ord (comparing)
 import Data.Maybe (fromMaybe)
@@ -33,7 +35,7 @@ import Language.PureScript.PSString (PSString)
 -- An identifier for the scope of a skolem variable
 --
 newtype SkolemScope = SkolemScope { runSkolemScope :: Int }
-  deriving (Show, Eq, Ord, A.ToJSON, A.FromJSON, Generic)
+  deriving (Data, Show, Eq, Ord, A.ToJSON, A.FromJSON, Generic)
 
 instance NFData SkolemScope
 
@@ -83,7 +85,7 @@ data Type
   -- Note: although it seems this constructor is not used, it _is_ useful,
   -- since it prevents certain traversals from matching.
   | ParensInType Type
-  deriving (Show, Eq, Ord, Generic)
+  deriving (Data, Show, Eq, Ord, Generic)
 
 instance NFData Type
 
@@ -95,7 +97,7 @@ data ConstraintData
   -- not matched, and a flag indicating whether the list was truncated or not.
   -- Note: we use 'Text' here because using 'Binder' would introduce a cyclic
   -- dependency in the module graph.
-  deriving (Show, Eq, Ord, Generic)
+  deriving (Data, Show, Eq, Ord, Generic)
 
 instance NFData ConstraintData
 
@@ -107,7 +109,7 @@ data Constraint = Constraint
   -- ^ type arguments
   , constraintData  :: Maybe ConstraintData
   -- ^ additional data relevant to this constraint
-  } deriving (Show, Eq, Ord, Generic)
+  } deriving (Data, Show, Eq, Ord, Generic)
 
 instance NFData Constraint
 

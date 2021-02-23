@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 
 module Language.PureScript.Environment where
 
@@ -9,6 +10,7 @@ import           GHC.Generics (Generic)
 import           Control.DeepSeq (NFData)
 import           Data.Aeson ((.=), (.:))
 import qualified Data.Aeson as A
+import           Data.Data (Data)
 import qualified Data.Map as M
 import qualified Data.Set as S
 import           Data.Maybe (fromMaybe, mapMaybe)
@@ -42,7 +44,7 @@ data Environment = Environment
   -- ^ Type classes
   , kinds :: S.Set (Qualified (ProperName 'KindName))
   -- ^ Kinds in scope
-  } deriving (Show, Generic)
+  } deriving (Data, Show, Generic)
 
 instance NFData Environment
 
@@ -65,7 +67,7 @@ data TypeClassData = TypeClassData
   -- typeClassArguments and typeClassDependencies.
   , typeClassCoveringSets :: S.Set (S.Set Int)
   -- ^ A sets of arguments that can be used to infer all other arguments.
-  } deriving (Show, Generic)
+  } deriving (Data, Show, Generic)
 
 instance NFData TypeClassData
 
@@ -76,7 +78,7 @@ data FunctionalDependency = FunctionalDependency
   -- ^ the type arguments which determine the determined type arguments
   , fdDetermined  :: [Int]
   -- ^ the determined type arguments
-  } deriving (Show, Generic)
+  } deriving (Data, Show, Generic)
 
 instance NFData FunctionalDependency
 
@@ -174,7 +176,7 @@ data NameVisibility
   -- ^ The name is defined in the current binding group, but is not visible
   | Defined
   -- ^ The name is defined in the another binding group, or has been made visible by a function binder
-  deriving (Show, Eq, Generic)
+  deriving (Data, Show, Eq, Generic)
 
 instance NFData NameVisibility
 
@@ -188,7 +190,7 @@ data NameKind
   -- ^ A public value for a module member or foreing import declaration
   | External
   -- ^ A name for member introduced by foreign import
-  deriving (Show, Eq, Generic)
+  deriving (Data, Show, Eq, Generic)
 
 instance NFData NameKind
 
@@ -204,7 +206,7 @@ data TypeKind
   -- ^ A local type variable
   | ScopedTypeVar
   -- ^ A scoped type variable
-  deriving (Show, Eq, Generic)
+  deriving (Data, Show, Eq, Generic)
 
 instance NFData TypeKind
 
@@ -237,7 +239,7 @@ data DataDeclType
   -- ^ A standard data constructor
   | Newtype
   -- ^ A newtype constructor
-  deriving (Show, Eq, Ord, Generic)
+  deriving (Data, Show, Eq, Ord, Generic)
 
 instance NFData DataDeclType
 

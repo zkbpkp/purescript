@@ -3,6 +3,7 @@
 {-# LANGUAGE DeriveFoldable #-}
 {-# LANGUAGE DeriveTraversable #-}
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 
 -- |
 -- Data types for modules and declarations
@@ -18,6 +19,7 @@ import Data.Aeson.TH
 import qualified Data.Map as M
 import Data.Set (Set)
 import Data.Text (Text)
+import Data.Data (Data)
 import qualified Data.List.NonEmpty as NEL
 import GHC.Generics (Generic)
 
@@ -54,7 +56,7 @@ data TypeSearch
     }
   -- ^ Results of applying type directed search to the previously captured
   -- Environment
-  deriving Show
+  deriving (Data, Show)
 
 onTypeSearchTypes :: (Type -> Type) -> TypeSearch -> TypeSearch
 onTypeSearchTypes f = runIdentity . onTypeSearchTypesM (Identity . f)
@@ -173,7 +175,9 @@ data SimpleErrorMessage
   | UserDefinedWarning Type
   -- | a declaration couldn't be used because it contained free variables
   | UnusableDeclaration Ident [[Text]]
-  deriving (Show)
+  deriving (Data, Show)
+
+instance Data P.ParseError  -- todo?
 
 -- | Error message hints, providing more detailed information about failure.
 data ErrorMessageHint
@@ -199,7 +203,7 @@ data ErrorMessageHint
   | ErrorInForeignImport Ident
   | ErrorSolvingConstraint Constraint
   | PositionedError SourceSpan
-  deriving (Show)
+  deriving (Data, Show)
 
 -- | Categories of hints
 data HintCategory
@@ -209,12 +213,12 @@ data HintCategory
   | PositionHint
   | SolverHint
   | OtherHint
-  deriving (Show, Eq)
+  deriving (Data, Show, Eq)
 
 data ErrorMessage = ErrorMessage
   [ErrorMessageHint]
   SimpleErrorMessage
-  deriving (Show)
+  deriving (Data, Show)
 
 -- |
 -- A module declaration, consisting of comments about the module, a module name,
@@ -222,7 +226,7 @@ data ErrorMessage = ErrorMessage
 -- explicitly exported. If the export list is Nothing, everything is exported.
 --
 data Module = Module SourceSpan [Comment] ModuleName [Declaration] (Maybe [DeclarationRef])
-  deriving (Show)
+  deriving (Data, Show)
 
 -- | Return a module's name.
 getModuleName :: Module -> ModuleName
@@ -301,7 +305,7 @@ data DeclarationRef
   -- elaboration in name desugaring.
   --
   | ReExportRef SourceSpan ModuleName DeclarationRef
-  deriving (Show, Generic, NFData)
+  deriving (Data, Show, Generic, NFData)
 
 instance Eq DeclarationRef where
   (TypeRef _ name dctors) == (TypeRef _ name' dctors') = name == name' && dctors == dctors'
@@ -406,7 +410,7 @@ data ImportDeclarationType
   -- An import with a list of references to hide: `import M hiding (foo)`
   --
   | Hiding [DeclarationRef]
-  deriving (Eq, Show)
+  deriving (Data, Eq, Show)
 
 isImplicit :: ImportDeclarationType -> Bool
 isImplicit Implicit = True
@@ -425,7 +429,7 @@ data TypeDeclarationData = TypeDeclarationData
   { tydeclSourceAnn :: !SourceAnn
   , tydeclIdent :: !Ident
   , tydeclType :: !Type
-  } deriving (Show, Eq)
+  } deriving (Data, Show, Eq)
 
 overTypeDeclaration :: (TypeDeclarationData -> TypeDeclarationData) -> Declaration -> Declaration
 overTypeDeclaration f d = maybe d (TypeDeclaration . f) (getTypeDeclaration d)
@@ -450,7 +454,7 @@ data ValueDeclarationData a = ValueDeclarationData
   -- ^ Whether or not this value is exported/visible
   , valdeclBinders :: ![Binder]
   , valdeclExpression :: !a
-  } deriving (Show, Functor, Foldable, Traversable)
+  } deriving (Data, Show, Functor, Foldable, Traversable)
 
 overValueDeclaration :: (ValueDeclarationData [GuardedExpr] -> ValueDeclarationData [GuardedExpr]) -> Declaration -> Declaration
 overValueDeclaration f d = maybe d (ValueDeclaration . f) (getValueDeclaration d)
@@ -523,13 +527,13 @@ data Declaration
   -- declarations)
   --
   | TypeInstanceDeclaration SourceAnn Ident [Constraint] (Qualified (ProperName 'ClassName)) [Type] TypeInstanceBody
-  deriving (Show)
+  deriving (Data, Show)
 
 data ValueFixity = ValueFixity Fixity (Qualified (Either Ident (ProperName 'ConstructorName))) (OpName 'ValueOpName)
-  deriving (Eq, Ord, Show)
+  deriving (Data, Eq, Ord, Show)
 
 data TypeFixity = TypeFixity Fixity (Qualified (ProperName 'TypeName)) (OpName 'TypeOpName)
-  deriving (Eq, Ord, Show)
+  deriving (Data, Eq, Ord, Show)
 
 pattern ValueFixityDeclaration :: SourceAnn -> Fixity -> Qualified (Either Ident (ProperName 'ConstructorName)) -> OpName 'ValueOpName -> Declaration
 pattern ValueFixityDeclaration sa fixity name op = FixityDeclaration sa (Left (ValueFixity fixity name op))
@@ -548,7 +552,7 @@ data TypeInstanceBody
   -- dictionary for the type under the newtype.
   | ExplicitInstance [Declaration]
   -- ^ This is a regular (explicit) instance
-  deriving (Show)
+  deriving (Data, Show)
 
 mapTypeInstanceBody :: ([Declaration] -> [Declaration]) -> TypeInstanceBody -> TypeInstanceBody
 mapTypeInstanceBody f = runIdentity . traverseTypeInstanceBody (Identity . f)
@@ -675,18 +679,18 @@ flattenDecls = concatMap flattenOne
 --
 data Guard = ConditionGuard Expr
            | PatternGuard Binder Expr
-           deriving (Show)
+           deriving (Data, Show)
 
 -- |
 -- The right hand side of a binder in value declarations
 -- and case expressions.
 data GuardedExpr = GuardedExpr [Guard] Expr
-                 deriving (Show)
+                 deriving (Data, Show)
 
 pattern MkUnguarded :: Expr -> GuardedExpr
 pattern MkUnguarded e = GuardedExpr [] e
 
-data WhereProvenance = FromLet | FromWhere deriving (Show)
+data WhereProvenance = FromLet | FromWhere deriving (Data, Show)
 
 -- |
 -- Data type for expressions and terms
@@ -805,7 +809,7 @@ data Expr
   -- A value with source position information
   --
   | PositionedValue SourceSpan [Comment] Expr
-  deriving (Show)
+  deriving (Data, Show)
 
 -- |
 -- An alternative in a case statement
@@ -819,7 +823,7 @@ data CaseAlternative = CaseAlternative
     -- The result expression or a collect of guarded expressions
     --
   , caseAlternativeResult :: [GuardedExpr]
-  } deriving (Show)
+  } deriving (Data, Show)
 
 -- |
 -- A statement in a do-notation block
@@ -841,7 +845,7 @@ data DoNotationElement
   -- A do notation element with source position information
   --
   | PositionedDoNotationElement SourceSpan [Comment] DoNotationElement
-  deriving (Show)
+  deriving (Data, Show)
 
 
 -- For a record update such as:
@@ -868,13 +872,13 @@ data DoNotationElement
 --
 
 newtype PathTree t = PathTree (AssocList PSString (PathNode t))
-  deriving (Show, Eq, Ord, Functor, Foldable, Traversable)
+  deriving (Data, Show, Eq, Ord, Functor, Foldable, Traversable)
 
 data PathNode t = Leaf t | Branch (PathTree t)
-  deriving (Show, Eq, Ord, Functor, Foldable, Traversable)
+  deriving (Data, Show, Eq, Ord, Functor, Foldable, Traversable)
 
 newtype AssocList k t = AssocList { runAssocList :: [(k, t)] }
-  deriving (Show, Eq, Ord, Foldable, Functor, Traversable)
+  deriving (Data, Show, Eq, Ord, Foldable, Functor, Traversable)
 
 $(deriveJSON (defaultOptions { sumEncoding = ObjectWithSingleField }) ''DeclarationRef)
 $(deriveJSON (defaultOptions { sumEncoding = ObjectWithSingleField }) ''ImportDeclarationType)

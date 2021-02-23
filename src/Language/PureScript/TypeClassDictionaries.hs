@@ -1,12 +1,14 @@
-{-# LANGUAGE DeriveFoldable    #-}
-{-# LANGUAGE DeriveTraversable #-}
-{-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE DeriveFoldable     #-}
+{-# LANGUAGE DeriveTraversable  #-}
+{-# LANGUAGE DeriveGeneric      #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 module Language.PureScript.TypeClassDictionaries where
 
 import Prelude.Compat
 
 import GHC.Generics (Generic)
 import Control.DeepSeq (NFData)
+import Data.Data (Data)
 import Data.Monoid ((<>))
 import Data.Text (Text, pack)
 
@@ -29,7 +31,7 @@ data TypeClassDictionaryInScope v
     -- | Type class dependencies which must be satisfied to construct this dictionary
     , tcdDependencies :: Maybe [Constraint]
     }
-    deriving (Show, Functor, Foldable, Traversable, Generic)
+    deriving (Data, Show, Functor, Foldable, Traversable, Generic)
 
 instance NFData v => NFData (TypeClassDictionaryInScope v)
 

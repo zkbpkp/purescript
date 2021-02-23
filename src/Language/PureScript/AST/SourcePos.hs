@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 -- |
 -- Source position information
 --
@@ -8,6 +9,7 @@ import Prelude.Compat
 
 import Control.DeepSeq (NFData)
 import Data.Aeson ((.=), (.:))
+import Data.Data (Data)
 import Data.Monoid
 import Data.Text (Text)
 import GHC.Generics (Generic)
@@ -25,7 +27,7 @@ data SourcePos = SourcePos
     -- ^ Line number
   , sourcePosColumn :: Int
     -- ^ Column number
-  } deriving (Show, Eq, Ord, Generic)
+  } deriving (Data, Show, Eq, Ord, Generic)
 
 instance NFData SourcePos
 
@@ -50,7 +52,7 @@ data SourceSpan = SourceSpan
     -- ^ Start of the span
   , spanEnd :: SourcePos
     -- ^ End of the span
-  } deriving (Show, Eq, Ord, Generic)
+  } deriving (Data, Show, Eq, Ord, Generic)
 
 instance NFData SourceSpan
 

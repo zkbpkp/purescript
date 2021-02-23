@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 
 module Language.PureScript.Kinds where
 
@@ -6,6 +7,7 @@ import Prelude.Compat
 
 import GHC.Generics (Generic)
 import Control.DeepSeq (NFData)
+import Data.Data (Data)
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Aeson.BetterErrors (Parse, key, asText, asIntegral, nth, fromAesonParser, toAesonParser, throwCustomError)
@@ -25,7 +27,7 @@ data Kind
   | FunKind Kind Kind
   -- | A named kind
   | NamedKind (Qualified (ProperName 'KindName))
-  deriving (Show, Eq, Ord, Generic)
+  deriving (Data, Show, Eq, Ord, Generic)
 
 instance NFData Kind
 

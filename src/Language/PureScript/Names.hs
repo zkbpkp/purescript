@@ -1,5 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 
 -- |
 -- Data types for names
@@ -14,6 +15,7 @@ import Control.DeepSeq (NFData)
 import GHC.Generics (Generic)
 import Data.Aeson
 import Data.Aeson.TH
+import Data.Data (Data)
 import Data.Monoid ((<>))
 import Data.Text (Text)
 import qualified Data.Text as T
@@ -28,7 +30,7 @@ data Name
   | TyClassName (ProperName 'ClassName)
   | ModName ModuleName
   | KiName (ProperName 'KindName)
-  deriving (Eq, Ord, Show, Generic)
+  deriving (Data, Eq, Ord, Show, Generic)
 
 instance NFData Name
 
@@ -76,7 +78,7 @@ data Ident
   -- A generated name for an identifier
   --
   | GenIdent (Maybe Text) Integer
-  deriving (Show, Eq, Ord, Generic)
+  deriving (Data, Show, Eq, Ord, Generic)
 
 instance NFData Ident
 
@@ -98,7 +100,7 @@ freshIdent' = GenIdent Nothing <$> fresh
 -- Operator alias names.
 --
 newtype OpName (a :: OpNameType) = OpName { runOpName :: Text }
-  deriving (Show, Eq, Ord, Generic)
+  deriving (Data, Show, Eq, Ord, Generic)
 
 instance NFData (OpName a)
 
@@ -120,7 +122,7 @@ data OpNameType = ValueOpName | TypeOpName
 -- Proper names, i.e. capitalized names for e.g. module names, type//data constructors.
 --
 newtype ProperName (a :: ProperNameType) = ProperName { runProperName :: Text }
-  deriving (Show, Eq, Ord, Generic)
+  deriving (Data, Show, Eq, Ord, Generic)
 
 instance NFData (ProperName a)
 
@@ -152,7 +154,7 @@ coerceProperName = ProperName . runProperName
 -- Module names
 --
 newtype ModuleName = ModuleName [ProperName 'Namespace]
-  deriving (Show, Eq, Ord, Generic)
+  deriving (Data, Show, Eq, Ord, Generic)
 
 instance NFData ModuleName
 
@@ -171,7 +173,7 @@ moduleNameFromString = ModuleName . splitProperNames
 -- A qualified name, i.e. a name with an optional module name
 --
 data Qualified a = Qualified (Maybe ModuleName) a
-  deriving (Show, Eq, Ord, Functor, Generic)
+  deriving (Data, Show, Eq, Ord, Functor, Generic)
 
 instance NFData a => NFData (Qualified a)
 
