@@ -226,7 +226,7 @@ data ErrorMessage = ErrorMessage
 -- explicitly exported. If the export list is Nothing, everything is exported.
 --
 data Module = Module SourceSpan [Comment] ModuleName [Declaration] (Maybe [DeclarationRef])
-  deriving (Data, Show)
+  deriving (Data, Generic, Show)
 
 -- | Return a module's name.
 getModuleName :: Module -> ModuleName
