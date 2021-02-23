@@ -686,6 +686,8 @@ data GuardedExpr = GuardedExpr [Guard] Expr
 pattern MkUnguarded :: Expr -> GuardedExpr
 pattern MkUnguarded e = GuardedExpr [] e
 
+data WhereProvenance = FromLet | FromWhere deriving (Show)
+
 -- |
 -- Data type for expressions and terms
 --
@@ -763,7 +765,7 @@ data Expr
   -- |
   -- A let binding
   --
-  | Let [Declaration] Expr
+  | Let WhereProvenance [Declaration] Expr
   -- |
   -- A do-notation block
   --

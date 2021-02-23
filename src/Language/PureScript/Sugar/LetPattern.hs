@@ -24,7 +24,7 @@ desugarLetPattern decl =
   in f decl
   where
   replace :: Expr -> Expr
-  replace (Let ds e) = go ds e
+  replace (Let _ ds e) = go ds e
   replace other = other
 
   go :: [Declaration]
@@ -38,5 +38,5 @@ desugarLetPattern decl =
   go (d:ds) e = append d $ go ds e
 
   append :: Declaration -> Expr -> Expr
-  append d (Let ds e) = Let (d:ds) e
-  append d e = Let [d] e
+  append d (Let p ds e) = Let p (d:ds) e
+  append d e = Let FromLet [d] e

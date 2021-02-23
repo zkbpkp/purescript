@@ -254,11 +254,11 @@ renameInModule imports (Module modSS coms mn decls exps) =
     return ((pos', bound), v)
   updateValue (pos, bound) (Abs (VarBinder arg) val') =
     return ((pos, arg : bound), Abs (VarBinder arg) val')
-  updateValue (pos, bound) (Let ds val') = do
+  updateValue (pos, bound) (Let p ds val') = do
     let args = mapMaybe letBoundVariable ds
     unless (length (ordNub args) == length args) .
       throwError . errorMessage' pos $ OverlappingNamesInLet
-    return ((pos, args ++ bound), Let ds val')
+    return ((pos, args ++ bound), Let p ds val')
   updateValue (pos, bound) (Var name'@(Qualified Nothing ident)) | ident `notElem` bound =
     (,) (pos, bound) <$> (Var <$> updateValueName name' pos)
   updateValue (pos, bound) (Var name'@(Qualified (Just _) _)) =

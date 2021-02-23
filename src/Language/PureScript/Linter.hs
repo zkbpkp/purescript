@@ -54,7 +54,7 @@ lint (Module _ _ mn ds _) = censor (addHint (ErrorInModule mn)) $ mapM_ lintDecl
 
     stepE :: S.Set Ident -> Expr -> MultipleErrors
     stepE s (Abs (VarBinder name) _) | name `S.member` s = errorMessage (ShadowedName name)
-    stepE s (Let ds' _) = foldMap go ds'
+    stepE s (Let _ ds' _) = foldMap go ds'
       where
       go d | Just i <- getDeclIdent d
            , i `S.member` s = errorMessage (ShadowedName i)

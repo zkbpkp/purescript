@@ -397,10 +397,10 @@ infer' (IfThenElse cond th el) = do
   (el'', elTy') <- instantiatePolyTypeWithUnknowns el' elTy
   unifyTypes thTy' elTy'
   return $ TypedValue True (IfThenElse cond' th'' el'') thTy'
-infer' (Let ds val) = do
+infer' (Let p ds val) = do
   (ds', val') <- inferLetBinding [] ds val infer
   let (_, _, valTy) = fromTypedValue val'
-  return $ TypedValue True (Let ds' val') valTy
+  return $ TypedValue True (Let p ds' val') valTy
 infer' (DeferredDictionary className tys) = do
   dicts <- getTypeClassDictionaries
   hints <- getHints
@@ -730,9 +730,9 @@ check' v@(Constructor c) ty = do
       ty' <- introduceSkolemScope ty
       elaborate <- subsumes repl ty'
       return $ TypedValue True (elaborate v) ty'
-check' (Let ds val) ty = do
+check' (Let p ds val) ty = do
   (ds', val') <- inferLetBinding [] ds val (`check` ty)
-  return $ TypedValue True (Let ds' val') ty
+  return $ TypedValue True (Let p ds' val') ty
 check' val kt@(KindedType ty kind) = do
   checkTypeKind ty kind
   val' <- check' val ty
